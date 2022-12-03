@@ -1,6 +1,6 @@
 # script to get the enron mails data
 
-if [[ ! -d "backend/enron_mail_20110402" ]]; then
+if [[ ! -d "db/enron_mail_20110402" ]]; then
     
     if [[ ! -f "enron_mail_20110402.tgz" ]]; then
         echo "Downloading the data from http://download.srv.cs.cmu.edu/\~enron/enron_mail_20110402.tgz ..."
@@ -8,7 +8,7 @@ if [[ ! -d "backend/enron_mail_20110402" ]]; then
     fi
 
     echo "Extracting the data..."
-    tar -C backend/ -xzf enron_mail_20110402.tgz
+    tar -C db/ -xzf enron_mail_20110402.tgz
     echo "Extracted successfully!"
 else
     echo "Directory 'enron_mail_20110402' already exists"
