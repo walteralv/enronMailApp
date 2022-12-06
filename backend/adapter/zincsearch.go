@@ -11,9 +11,24 @@ import (
 
 const (
 	zincSearchHost = "http://localhost:4080"
+	defaultSearchType = "matchphrase"
+	defaultMaxResults = 10
 )
 
-type SearchDocumentsResponse struct {
+type SearchEmailRequest struct {
+	SearchType string                      `json:"search_type"`
+	SortFields []string                    `json:"sort_fields"`
+	From       int                         `json:"from"`
+	MaxResults int                         `json:"max_results"`
+	Query      SearchEmailRequestQuery `json:"query"`
+	Source     map[string]interface{}      `json:"_source"`
+}
+
+type SearchEmailRequestQuery struct {
+	Term string `json:"term"`
+}
+
+type SearchEmailResponse struct {
 	Hits struct {
 		Hits []struct {
 			ID        string                 `json:"_id"`
@@ -30,7 +45,6 @@ type SearchDocumentsResponse struct {
 	Took     float64 `json:"took"`
 }
 
-
 func setBasicHeaders(req *http.Request) {
 	username := os.Getenv("ZINC_FIRST_ADMIN_USER")
 	password := os.Getenv("ZINC_FIRST_ADMIN_PASSWORD")
@@ -45,24 +59,25 @@ func setBasicHeaders(req *http.Request) {
 
 }
 
-// SearchDocuments searches documents with the Search ZincSearch API
-func SearchDocuments(indexName, term string) (*SearchDocumentsResponse, error) {
-	response := &SearchDocumentsResponse{}
+// SearchEmail searches documents with the Search ZincSearch API
+func SearchEmail(indexName, term string) (*SearchEmailResponse, error) {
+	response := &SearchEmailResponse{}
 
 	path := fmt.Sprintf("%s/api/%s/_search", zincSearchHost, indexName)
 
-	query := fmt.Sprintf(`{
-        "search_type": "match",
-        "query":
-        {
-            "term": "%s"
-        },
-        "from": 0,
-        "max_results": 5,
-        "_source": []
-    }`, term)
+	searchEmailRequest := SearchEmailRequest{
+		SearchType: defaultSearchType,
+		Query: SearchEmailRequestQuery{
+			Term: term,
+		},
+		SortFields: []string{"-@timestamp"},
+		From:       0,
+		MaxResults: defaultMaxResults,
+	}
 
-	req, err := http.NewRequest("POST", path, strings.NewReader(query))
+	query, _ := json.Marshal(searchEmailRequest)
+
+	req, err := http.NewRequest("POST", path, strings.NewReader(string(query)))
 	setBasicHeaders(req)
 
 	if err != nil {

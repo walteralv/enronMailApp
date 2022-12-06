@@ -19,11 +19,12 @@ type Email struct {
 	Content   string `json:"content"`
 }
 
+
 type SearchEmailsResponse struct {
 	Emails []Email `json:"emails"`
 }
 
-func mapZincSearchResponseToEmails(response *adapter.SearchDocumentsResponse) []Email {
+func mapZincSearchResponseToEmails(response *adapter.SearchEmailResponse) []Email {
 	var emails []Email
 
 	for _, hit := range response.Hits.Hits {
@@ -47,7 +48,7 @@ func SearchEmail(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	term := query.Get("q")
 
-	records, err := adapter.SearchDocuments("emails", term)
+	records, err := adapter.SearchEmail("emails", term)
 	if err != nil {
 		panic(err)
 	}
