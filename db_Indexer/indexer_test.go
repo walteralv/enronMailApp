@@ -1,4 +1,4 @@
-package indexer
+package main
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 
 const (
 	PATH_ENRON_USERS_TEST = "./enron_mail_test"
-	INDEX_TEST            = "enron_test"
+	INDEX_TEST            = "emails_test"
 )
 
 func createEnronDirTest(num_users int) {
@@ -29,7 +29,7 @@ func createEnronDirTest(num_users int) {
 }
 
 func TestIndexer(t *testing.T) {
-	// createEnronDirTest(2)
+	createEnronDirTest(2)
 	listEmailFilePaths, err := getListEmailFilePaths(PATH_ENRON_USERS_TEST)
 	if err != nil {
 		log.Fatal(err)

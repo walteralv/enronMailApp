@@ -1,4 +1,4 @@
-package indexer
+package main
 
 import (
 	"encoding/json"
@@ -13,7 +13,7 @@ const (
 	PATH_ENRON_USERS        = "./enron_mail_20110402/maildir"
 	EMAIL_FIELDS_SEPARATOR  = "\r\n"     // carriage return + line feed
 	EMAIL_CONTENT_SEPARATOR = "\r\n\r\n" // double "carriage return + line feed"
-	INDEX                   = "enron"
+	INDEX                   = "emails"
 	USER                    = "admin"
 	PASSWORD                = "Complexpass#123"
 	URL_ZINC_API            = "http://localhost:4080/api/"
