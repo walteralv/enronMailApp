@@ -20,9 +20,9 @@ func createEnronDirTest(num_users int) {
 		if err := os.MkdirAll(PATH_ENRON_USERS_TEST, os.ModePerm); err != nil {
 			log.Fatal(err)
 		}
-		users, _ := os.ReadDir(PATH_ENRON_USERS)
+		users, _ := os.ReadDir(DEFAULT_ENRON_USERS_PATH)
 		for _, user := range users[:num_users] {
-			cmd := exec.Command("cp", "-r", PATH_ENRON_USERS+"/"+user.Name(), PATH_ENRON_USERS_TEST)
+			cmd := exec.Command("cp", "-r", DEFAULT_ENRON_USERS_PATH+"/"+user.Name(), PATH_ENRON_USERS_TEST)
 			cmd.Run()
 		}
 	}

@@ -4,10 +4,10 @@ import { ArrowUpOnSquareIcon } from '@heroicons/vue/24/solid'
 
 
 <template>
-  <div class="flex  justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="flex  justify-center py-5 px-4 sm:px-6 lg:px-8">
     <div class="w-full max-w-lx">
-      <form class="grid grid-cols-4 gap-0" >
-        <div class="col-span-3 h-full -space-y-px rounded-md shadow-sm">
+      <form class="grid grid-cols-8 gap-0" >
+        <div class="col-span-7 h-full -space-y-px rounded-md shadow-sm">
             <input type="text" name="term" autocomplete="search" required="True" class="relative h-full block w-full appearance-none px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm" 
             placeholder="Search a word..." />
         </div>

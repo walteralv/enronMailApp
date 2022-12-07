@@ -23,7 +23,7 @@ func main() {
 
 	app.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"http://*"},
-		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
+		AllowedMethods:   []string{"GET", "POST"},
 		AllowedHeaders:   []string{"Content-Type"},
 		AllowCredentials: false,
 	}))

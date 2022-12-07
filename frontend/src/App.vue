@@ -31,10 +31,9 @@ const searchNewTerm = (e) => {
 <template>
   <div>
     <h1 class="text-green-400	text-6xl font-bold tracking-widest	">Email Search Engine</h1>
-    <p class="text-left font-medium ">
+    <p class="text-left font-medium my-5">
       This application is a search engine that searches through the emails in the 
       <a class="" href="">Enron database</a>
-
       It contains data from about 150 users, mostly senior management of Enron, organized into folders. The corpus contains a total of about 0.5M messages. This data was originally made public, and posted to the web, by the Federal Energy Regulatory Commission during its investigation.
     </p>      
   </div>

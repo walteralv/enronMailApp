@@ -10,13 +10,13 @@ import (
 )
 
 const (
-	PATH_ENRON_USERS        = "./enron_mail_20110402/maildir"
-	EMAIL_FIELDS_SEPARATOR  = "\r\n"     // carriage return + line feed
-	EMAIL_CONTENT_SEPARATOR = "\r\n\r\n" // double "carriage return + line feed"
-	INDEX                   = "emails"
-	USER                    = "admin"
-	PASSWORD                = "Complexpass#123"
-	URL_ZINC_API            = "http://localhost:4080/api/"
+	DEFAULT_ENRON_USERS_PATH = "./enron_mail_20110402/maildir"
+	EMAIL_FIELDS_SEPARATOR   = "\r\n"     // carriage return + line feed
+	EMAIL_CONTENT_SEPARATOR  = "\r\n\r\n" // double "carriage return + line feed"
+	INDEX                    = "emails"
+	USER                     = "admin"
+	PASSWORD                 = "Complexpass#123"
+	URL_ZINC_API             = "http://localhost:4080/api/"
 )
 
 type Email struct {
@@ -148,7 +148,11 @@ func getListEmailFilePaths(root string) ([]string, error) {
 
 func main() {
 
-	listEmailFilePaths, err := getListEmailFilePaths(PATH_ENRON_USERS)
+	enronUsersPath := os.Args[1]+"/maildir"
+	if enronUsersPath == "" {
+		enronUsersPath = DEFAULT_ENRON_USERS_PATH
+	}
+	listEmailFilePaths, err := getListEmailFilePaths(enronUsersPath)
 	if err != nil {
 		log.Fatal(err)
 	}

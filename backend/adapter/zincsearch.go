@@ -15,6 +15,8 @@ const (
 	defaultMaxResults = 10
 )
 
+// For more information read https://docs.zincsearch.com/api/search/search/#golang-example
+// Request struct to consult ZincSearch API  
 type SearchEmailRequest struct {
 	SearchType string                      `json:"search_type"`
 	SortFields []string                    `json:"sort_fields"`
@@ -28,6 +30,8 @@ type SearchEmailRequestQuery struct {
 	Term string `json:"term"`
 }
 
+// For more information read https://docs.zincsearch.com/api/search/search/#golang-example
+// Response struct to ZincSearch API response
 type SearchEmailResponse struct {
 	Hits struct {
 		Hits []struct {
@@ -45,6 +49,7 @@ type SearchEmailResponse struct {
 	Took     float64 `json:"took"`
 }
 
+// set basic header to request
 func setBasicHeaders(req *http.Request) {
 	username := os.Getenv("ZINC_FIRST_ADMIN_USER")
 	password := os.Getenv("ZINC_FIRST_ADMIN_PASSWORD")
@@ -59,7 +64,8 @@ func setBasicHeaders(req *http.Request) {
 
 }
 
-// SearchEmail searches documents with the Search ZincSearch API
+// For more information read https://docs.zincsearch.com/api/search/search/#golang-example
+// searches emails with the Search ZincSearch API
 func SearchEmail(indexName, term string) (*SearchEmailResponse, error) {
 	response := &SearchEmailResponse{}
 
@@ -70,7 +76,7 @@ func SearchEmail(indexName, term string) (*SearchEmailResponse, error) {
 		Query: SearchEmailRequestQuery{
 			Term: term,
 		},
-		SortFields: []string{"-@timestamp"},
+		SortFields: []string{"@timestamp"},
 		From:       0,
 		MaxResults: defaultMaxResults,
 	}
