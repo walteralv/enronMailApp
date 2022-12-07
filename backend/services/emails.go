@@ -19,7 +19,6 @@ type Email struct {
 	Content   string `json:"content"`
 }
 
-
 type SearchEmailsResponse struct {
 	Emails []Email `json:"emails"`
 }

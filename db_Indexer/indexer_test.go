@@ -28,13 +28,18 @@ func createEnronDirTest(num_users int) {
 	}
 }
 
+
+
+
 func TestIndexer(t *testing.T) {
-	createEnronDirTest(2)
+	// createEnronDirTest(2)
 	listEmailFilePaths, err := getListEmailFilePaths(PATH_ENRON_USERS_TEST)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(len(listEmailFilePaths), "email files were found")
+	numEmailsFound := len(listEmailFilePaths)
+	log.Println(numEmailsFound, "email files were found")
+	var emails = make([]Email, numEmailsFound)
 
 	for _, EmailFilePath := range listEmailFilePaths {
 		log.Println("Indexing file ", EmailFilePath)
@@ -42,11 +47,20 @@ func TestIndexer(t *testing.T) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		emailJson, _ := json.Marshal(email)
-		err = ingestToZinc(string(emailJson), INDEX_TEST)
-		if err != nil {
-			log.Fatal(err)
-		}
+		emails = append(emails, *email)
+		// emailJson, _ := json.Marshal(email)
+		// err = ingestToZinc(string(emailJson), INDEX_TEST)
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
 	}
+
+	bulkv2Request := Bulkv2Request{
+		Index:   INDEX,
+		Records: emails,
+	}
+	bulkv2RequestJson, _ := json.Marshal(bulkv2Request)
+	log.Println("Ingeting emails found to ZincSearch!")
+	bulkv2IngestToZinc(string(bulkv2RequestJson))
 
 }

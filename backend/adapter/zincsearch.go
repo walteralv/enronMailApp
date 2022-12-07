@@ -10,20 +10,20 @@ import (
 )
 
 const (
-	zincSearchHost = "http://localhost:4080"
+	zincSearchHost    = "http://localhost:4080"
 	defaultSearchType = "matchphrase"
 	defaultMaxResults = 10
 )
 
 // For more information read https://docs.zincsearch.com/api/search/search/#golang-example
-// Request struct to consult ZincSearch API  
+// Request struct to consult ZincSearch API
 type SearchEmailRequest struct {
-	SearchType string                      `json:"search_type"`
-	SortFields []string                    `json:"sort_fields"`
-	From       int                         `json:"from"`
-	MaxResults int                         `json:"max_results"`
+	SearchType string                  `json:"search_type"`
+	SortFields []string                `json:"sort_fields"`
+	From       int                     `json:"from"`
+	MaxResults int                     `json:"max_results"`
 	Query      SearchEmailRequestQuery `json:"query"`
-	Source     map[string]interface{}      `json:"_source"`
+	Source     map[string]interface{}  `json:"_source"`
 }
 
 type SearchEmailRequestQuery struct {

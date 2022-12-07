@@ -39,6 +39,11 @@ type Email struct {
 	Filepath                string `json:"Filepath"`
 }
 
+type Bulkv2Request struct {
+	Index   string  `json:"index"`
+	Records []Email `json:"records"`
+}
+
 func ProcessEmailFile(filepathString string) (*Email, error) {
 	file, err := os.ReadFile(filepath.Clean(filepathString))
 	if err != nil {
@@ -57,7 +62,7 @@ func ProcessEmailFile(filepathString string) (*Email, error) {
 	detailsArr := strings.Split(allDetails, EMAIL_FIELDS_SEPARATOR)
 
 	email := mapEmailDetails(detailsArr, content)
-	email.Filepath = filepathString
+	// email.Filepath = filepathString
 
 	return email, nil
 }
@@ -102,12 +107,29 @@ func mapEmailDetails(details []string, content string) *Email {
 			continue
 		}
 	}
-	email.Content = content
+	// email.Content = content
 	return email
 }
 
 func ingestToZinc(data, index string) error {
 	req, err := http.NewRequest("POST", URL_ZINC_API+index+"/_doc", strings.NewReader(string(data)))
+	if err != nil {
+		log.Fatal(err)
+	}
+	req.SetBasicAuth(USER, PASSWORD)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
+	return err
+}
+
+func bulkv2IngestToZinc(data string) error {
+	req, err := http.NewRequest("POST", URL_ZINC_API+"/_bulkv2", strings.NewReader(data))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -148,7 +170,7 @@ func getListEmailFilePaths(root string) ([]string, error) {
 
 func main() {
 
-	enronUsersPath := os.Args[1]+"/maildir"
+	enronUsersPath := os.Args[1] + "/maildir"
 	if enronUsersPath == "" {
 		enronUsersPath = DEFAULT_ENRON_USERS_PATH
 	}
@@ -156,7 +178,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(len(listEmailFilePaths), "email files were found")
+	numEmailsFound := len(listEmailFilePaths)
+	log.Println(numEmailsFound, "email files were found")
+	// var body []byte
+	var emails = make([]Email, numEmailsFound)
+	// f, err := os.Create("enron_emails.ndjson")
+	// defer f.Close()
 
 	for _, EmailFilePath := range listEmailFilePaths {
 		log.Println("Indexing file ", EmailFilePath)
@@ -164,10 +191,20 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		emailJson, _ := json.Marshal(email)
-		err = ingestToZinc(string(emailJson), INDEX)
-		if err != nil {
-			log.Fatal(err)
-		}
+		emails = append(emails, *email)
+		// emailJson, _ := json.Marshal(email)
+		// body = append(body, append(emailJson, 10)...)
+		// f.Write(append(emailJson,10))
 	}
+
+	bulkv2Request := Bulkv2Request{
+		Index:   INDEX,
+		Records: emails,
+	}
+	bulkv2RequestJson, _ := json.Marshal(bulkv2Request)
+	log.Println("Ingeting emails found to ZincSearch!")
+
+	bulkv2IngestToZinc(string(bulkv2RequestJson))
+	// f.Write(body)
+
 }
